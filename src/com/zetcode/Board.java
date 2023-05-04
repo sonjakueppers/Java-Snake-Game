@@ -17,16 +17,17 @@ import javax.swing.Timer;
 
 public class Board extends JPanel implements ActionListener {
 
-    private final int B_WIDTH = 500;
-    private final int B_HEIGHT = 500;
+    private final int B_WIDTH = 250;
+    private final int B_HEIGHT = 250;
     private final int DOT_SIZE = 10;
     private final int ALL_DOTS = 900;
-    private final int RAND_POS = 50;
-    private final int DELAY = 30;
+    private final int RAND_POS = 25;
+    
 
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
 
+    private int DELAY = 100;
     private int dots;
     private int apple_x;
     private int apple_y;
@@ -117,12 +118,16 @@ public class Board extends JPanel implements ActionListener {
     private void gameOver(Graphics g) {
         
         String msg = "Game Over - Too Bad!!!";
+        String msg1 = "Score: " + (dots - 3);
         Font small = new Font("Helvetica", Font.BOLD, 14);
+        Font medeum = new Font("Helvetica", Font.BOLD, 18);
         FontMetrics metr = getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
+        g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 3);
+        g.setFont(medeum);
+        g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2);
     }
 
     private void checkApple() {
@@ -130,6 +135,7 @@ public class Board extends JPanel implements ActionListener {
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
 
             dots++;
+            DELAY--;
             locateApple();
         }
     }
