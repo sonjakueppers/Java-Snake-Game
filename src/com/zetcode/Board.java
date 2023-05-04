@@ -27,10 +27,12 @@ public class Board extends JPanel implements ActionListener {
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
 
-    private int DELAY = 100;
+    private int DELAY = 125;
     private int dots;
     private int apple_x;
     private int apple_y;
+    private int pApple_x;
+    private int pApple_y;
 
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -41,6 +43,8 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private Image ball;
     private Image apple;
+    private Image pApple;
+    
     private Image head;
 
     public Board() {
@@ -69,6 +73,8 @@ public class Board extends JPanel implements ActionListener {
 
         ImageIcon iih = new ImageIcon("src/resources/head.png");
         head = iih.getImage();
+        
+        ImageIcon iip = new ImageIcon("src/resources/pApple.pnt");
     }
 
     private void initGame() {
