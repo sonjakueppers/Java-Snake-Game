@@ -159,6 +159,12 @@ public class Board extends JPanel implements ActionListener {
             }
         }
     }
+    private void checkpApple() {
+    	
+    	if ((x[0] == pApple_x) && (y[0] == pApple_y)) {
+    		inGame = false;
+    	}
+    }
 
     private void move() {
 
@@ -242,7 +248,8 @@ public class Board extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (inGame) {
-
+        	
+        	checkpApple();
             checkApple();
             checkCollision();
             move();
