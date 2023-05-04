@@ -33,6 +33,8 @@ public class Board extends JPanel implements ActionListener {
     private int apple_y;
     private int pApple_x;
     private int pApple_y;
+    private int score = 0;
+    private int pAppleI = 0;
 
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -74,7 +76,8 @@ public class Board extends JPanel implements ActionListener {
         ImageIcon iih = new ImageIcon("src/resources/head.png");
         head = iih.getImage();
         
-        ImageIcon iip = new ImageIcon("src/resources/pApple.pnt");
+        ImageIcon iip = new ImageIcon("src/resources/pApple.png");
+        pApple = iip.getImage();
     }
 
     private void initGame() {
@@ -87,6 +90,8 @@ public class Board extends JPanel implements ActionListener {
         }
         
         locateApple();
+        locatepApple();
+        
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -104,6 +109,7 @@ public class Board extends JPanel implements ActionListener {
         if (inGame) {
 
             g.drawImage(apple, apple_x, apple_y, this);
+            g.drawImage(pApple, pApple_x, pApple_y, this);
 
             for (int z = 0; z < dots; z++) {
                 if (z == 0) {
@@ -124,7 +130,7 @@ public class Board extends JPanel implements ActionListener {
     private void gameOver(Graphics g) {
         
         String msg = "Game Over - Too Bad!!!";
-        String msg1 = "Score: " + (dots - 3);
+        String msg1 = "Score: " + score;
         Font small = new Font("Helvetica", Font.BOLD, 14);
         Font medeum = new Font("Helvetica", Font.BOLD, 18);
         FontMetrics metr = getFontMetrics(small);
@@ -143,6 +149,14 @@ public class Board extends JPanel implements ActionListener {
             dots++;
             DELAY--;
             locateApple();
+            score++;
+            if (pAppleI == 2) {
+            	locatepApple();
+            	pAppleI = 0;
+            }
+            else {
+            	pAppleI ++;
+            }
         }
     }
 
@@ -207,6 +221,21 @@ public class Board extends JPanel implements ActionListener {
 
         r = (int) (Math.random() * RAND_POS);
         apple_y = ((r * DOT_SIZE));
+    }
+    private void locatepApple() {
+    	
+    	int r = (int) (Math.random() * RAND_POS);
+        pApple_x = ((r * DOT_SIZE));
+
+        r = (int) (Math.random() * RAND_POS);
+        pApple_y = ((r * DOT_SIZE));
+        
+        /*if (pApple_x == apple_x) {
+        	pApple_x ++;
+        	if (pApple_x > RAND_POS) {
+        		pApple_x -= 2;
+        	}
+        }*/
     }
 
     @Override
