@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.util.*;
 
 public class Board extends JPanel implements ActionListener {
 
@@ -27,12 +28,14 @@ public class Board extends JPanel implements ActionListener {
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
 
-    private int DELAY = 125;
+    private int DELAY = 135;
     private int dots;
     private int apple_x;
     private int apple_y;
-    private int pApple_x;
-    private int pApple_y;
+    private ArrayList<Integer> pApples_x = new ArrayList<Integer>();
+    private ArrayList<Integer> pApples_y = new ArrayList<Integer>();
+    private int score = 0;
+    private int pAppleI = 0;
 
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -74,7 +77,9 @@ public class Board extends JPanel implements ActionListener {
         ImageIcon iih = new ImageIcon("src/resources/head.png");
         head = iih.getImage();
         
-        ImageIcon iip = new ImageIcon("src/resources/pApple.pnt");
+        ImageIcon iip = new ImageIcon("src/resources/pApple.png");
+        pApple = iip.getImage();
+        
     }
 
     private void initGame() {
@@ -85,8 +90,10 @@ public class Board extends JPanel implements ActionListener {
             x[z] = 50 - z * 10;
             y[z] = 50;
         }
-        
+        locatepApple();
         locateApple();
+        
+        
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -103,7 +110,12 @@ public class Board extends JPanel implements ActionListener {
         
         if (inGame) {
 
+        	
             g.drawImage(apple, apple_x, apple_y, this);
+            for (int i = 0; i < pApples_x.size(); i++) {
+            	g.drawImage(pApple, pApples_x.get(i), pApples_y.get(i), this);
+            }
+           
 
             for (int z = 0; z < dots; z++) {
                 if (z == 0) {
@@ -115,7 +127,7 @@ public class Board extends JPanel implements ActionListener {
 
             Toolkit.getDefaultToolkit().sync();
 
-        } else {
+        }else {
 
             gameOver(g);
         }        
@@ -124,7 +136,7 @@ public class Board extends JPanel implements ActionListener {
     private void gameOver(Graphics g) {
         
         String msg = "Game Over - Too Bad!!!";
-        String msg1 = "Score: " + (dots - 3);
+        String msg1 = "Score: " + score;
         Font small = new Font("Helvetica", Font.BOLD, 14);
         Font medeum = new Font("Helvetica", Font.BOLD, 18);
         FontMetrics metr = getFontMetrics(small);
@@ -143,7 +155,24 @@ public class Board extends JPanel implements ActionListener {
             dots++;
             DELAY--;
             locateApple();
+            score++;
+            if (pAppleI == 2) {
+            	locatepApple();
+            	pAppleI = 0;
+            	
+            }
+            else {
+            	pAppleI ++;
+            }
         }
+    }
+    private void checkpApple() {
+    	
+    	for(int i = 0; i < pApples_x.size(); i++) {
+	    	if ((x[0] == pApples_x.get(i)) && (y[0] == pApples_y.get(i))) {
+	    		inGame = false;
+	    	}
+    	}	
     }
 
     private void move() {
@@ -207,13 +236,46 @@ public class Board extends JPanel implements ActionListener {
 
         r = (int) (Math.random() * RAND_POS);
         apple_y = ((r * DOT_SIZE));
+        for (int i = 0; i < pApples_x.size(); i++) {
+	        if (pApples_x.get(i) == apple_x && pApples_y.get(i) == apple_y) {
+	        	if (apple_x + DOT_SIZE > B_WIDTH - DOT_SIZE) {
+	        		apple_x -= DOT_SIZE;
+	        	}
+	        	else { 
+	        		apple_x =+ DOT_SIZE;
+	        	}
+        }
+       }
     }
+    private void locatepApple() {
+    	
+    	int r = (int) (Math.random() * RAND_POS);
+        pApples_x.add((r * DOT_SIZE));
+
+        r = (int) (Math.random() * RAND_POS);
+        pApples_y.add ((r * DOT_SIZE));
+        int size = pApples_x.size() - 1;
+        	
+        if (pApples_x.get(size) == apple_x && pApples_y.get(size) == apple_y) {
+        	if (pApples_x.get(size) + DOT_SIZE > B_WIDTH - DOT_SIZE) {
+        		pApples_x.set(size, pApples_x.get(size) - DOT_SIZE);
+        	}
+        	else { 
+        		pApples_x.set(size, pApples_x.get(size) + DOT_SIZE);
+        	}
+       }
+        
+    }
+    
+    
+    
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
         if (inGame) {
-
+        	
+        	checkpApple();
             checkApple();
             checkCollision();
             move();
