@@ -304,13 +304,13 @@ public class Board extends JPanel implements ActionListener {
                 downDirection = false;
             }
 
-            if ((key == KeyEvent.VK_UP) && (!((y[0] + DOT_SIZE) == y[1])) && (!downDirection)) {
+            if ((key == KeyEvent.VK_UP) && (!((y[0] - DOT_SIZE) == y[1])) && (!downDirection)) {
                 upDirection = true;
                 rightDirection = false;
                 leftDirection = false;
             }
 
-            if ((key == KeyEvent.VK_DOWN) && (!((y[0] - DOT_SIZE) == y[1])) && (!upDirection)) {
+            if ((key == KeyEvent.VK_DOWN) && (!((y[0] + DOT_SIZE) == y[1])) && (!upDirection)) {
                 downDirection = true;
                 rightDirection = false;
                 leftDirection = false;
