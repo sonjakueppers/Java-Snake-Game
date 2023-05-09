@@ -131,6 +131,7 @@ public class Board extends JPanel implements ActionListener {
 
             dots++;
             locateApple();
+            java.awt.Toolkit.getDefaultToolkit().beep();
         }
     }
 
