@@ -164,6 +164,7 @@ public class Board extends JPanel implements ActionListener {
             else {
             	pAppleI ++;
             }
+            java.awt.Toolkit.getDefaultToolkit().beep();
         }
     }
     private void checkpApple() {
@@ -226,6 +227,11 @@ public class Board extends JPanel implements ActionListener {
         
         if (!inGame) {
             timer.stop();
+           	try {
+				Sound.playSound();
+			} catch (Exception e) {
+			}
+
         }
     }
 
