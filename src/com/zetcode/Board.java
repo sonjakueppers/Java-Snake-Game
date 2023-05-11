@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.JButton;
 import java.util.*;
 
 public class Board extends JPanel implements ActionListener {
@@ -49,6 +50,10 @@ public class Board extends JPanel implements ActionListener {
     private Image pApple;
     
     private Image head;
+    
+    //button-related
+    private JButton restartButton = new JButton("Replay");
+    
 
     public Board() {
         
@@ -130,6 +135,10 @@ public class Board extends JPanel implements ActionListener {
         }else {
 
             gameOver(g);
+            //button-related
+            add(restartButton);
+            restartButton.addActionListener(this);
+            revalidate();
         }        
     }
 
@@ -280,6 +289,23 @@ public class Board extends JPanel implements ActionListener {
         
     }
     
+    private void replayGame() {
+    	if(!inGame) {
+    		remove(restartButton);
+    		leftDirection = false;
+    	    rightDirection = true;
+    	    upDirection = false;
+    	    downDirection = false;
+    	    inGame = true;
+    	    score = 0;
+    	    pApples_x.clear();
+    	    pApples_y.clear();
+    	    pAppleI = 1;
+    	    revalidate();
+    	    initGame();
+    	}
+    }
+    
     
     
 
@@ -292,6 +318,12 @@ public class Board extends JPanel implements ActionListener {
             checkApple();
             checkCollision();
             move();
+        }
+        
+        if (!inGame) {
+        	if (e.getSource() == restartButton) {
+        		replayGame();
+        	}
         }
 
         repaint();
