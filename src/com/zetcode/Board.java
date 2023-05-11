@@ -186,6 +186,11 @@ public class Board extends JPanel implements ActionListener {
         
         if (!inGame) {
             timer.stop();
+           	try {
+				Sound.playSound();
+			} catch (Exception e) {
+			}
+
         }
     }
 
