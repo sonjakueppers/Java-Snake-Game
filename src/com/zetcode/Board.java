@@ -14,22 +14,28 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.util.*;
 
 public class Board extends JPanel implements ActionListener {
 
-    private final int B_WIDTH = 300;
-    private final int B_HEIGHT = 300;
+    private final int B_WIDTH = 250;
+    private final int B_HEIGHT = 250;
     private final int DOT_SIZE = 10;
     private final int ALL_DOTS = 900;
-    private final int RAND_POS = 29;
-    private final int DELAY = 140;
+    private final int RAND_POS = 25;
+    
 
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
 
+    private int DELAY = 175;
     private int dots;
     private int apple_x;
     private int apple_y;
+    private ArrayList<Integer> pApples_x = new ArrayList<Integer>();
+    private ArrayList<Integer> pApples_y = new ArrayList<Integer>();
+    private int score = 0;
+    private int pAppleI = 0;
 
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -40,6 +46,8 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private Image ball;
     private Image apple;
+    private Image pApple;
+    
     private Image head;
 
     public Board() {
@@ -68,6 +76,10 @@ public class Board extends JPanel implements ActionListener {
 
         ImageIcon iih = new ImageIcon("src/resources/head.png");
         head = iih.getImage();
+        
+        ImageIcon iip = new ImageIcon("src/resources/pApple.png");
+        pApple = iip.getImage();
+        
     }
 
     private void initGame() {
@@ -78,8 +90,10 @@ public class Board extends JPanel implements ActionListener {
             x[z] = 50 - z * 10;
             y[z] = 50;
         }
-        
+        locatepApple();
         locateApple();
+        
+        
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -96,7 +110,12 @@ public class Board extends JPanel implements ActionListener {
         
         if (inGame) {
 
+        	
             g.drawImage(apple, apple_x, apple_y, this);
+            for (int i = 0; i < pApples_x.size(); i++) {
+            	g.drawImage(pApple, pApples_x.get(i), pApples_y.get(i), this);
+            }
+           
 
             for (int z = 0; z < dots; z++) {
                 if (z == 0) {
@@ -108,7 +127,7 @@ public class Board extends JPanel implements ActionListener {
 
             Toolkit.getDefaultToolkit().sync();
 
-        } else {
+        }else {
 
             gameOver(g);
         }        
@@ -116,13 +135,17 @@ public class Board extends JPanel implements ActionListener {
 
     private void gameOver(Graphics g) {
         
-        String msg = "Game Over - Too Bad!";
+        String msg = "Game Over - Too Bad!!!";
+        String msg1 = "Score: " + score;
         Font small = new Font("Helvetica", Font.BOLD, 14);
+        Font medeum = new Font("Helvetica", Font.BOLD, 18);
         FontMetrics metr = getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
+        g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 3);
+        g.setFont(medeum);
+        g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2);
     }
 
     private void checkApple() {
@@ -130,9 +153,27 @@ public class Board extends JPanel implements ActionListener {
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
 
             dots++;
+            DELAY--;
             locateApple();
+            score++;
+            if (pAppleI == 2) {
+            	locatepApple();
+            	pAppleI = 0;
+            	
+            }
+            else {
+            	pAppleI ++;
+            }
             java.awt.Toolkit.getDefaultToolkit().beep();
         }
+    }
+    private void checkpApple() {
+    	
+    	for(int i = 0; i < pApples_x.size(); i++) {
+	    	if ((x[0] == pApples_x.get(i)) && (y[0] == pApples_y.get(i))) {
+	    		inGame = false;
+	    	}
+    	}	
     }
 
     private void move() {
@@ -163,7 +204,7 @@ public class Board extends JPanel implements ActionListener {
 
         for (int z = dots; z > 0; z--) {
 
-            if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
+            if ((x[0] == x[z]) && (y[0] == y[z])) {
                 inGame = false;
             }
         }
@@ -201,13 +242,46 @@ public class Board extends JPanel implements ActionListener {
 
         r = (int) (Math.random() * RAND_POS);
         apple_y = ((r * DOT_SIZE));
+        for (int i = 0; i < pApples_x.size(); i++) {
+	        if (pApples_x.get(i) == apple_x && pApples_y.get(i) == apple_y) {
+	        	if (apple_x + DOT_SIZE > B_WIDTH - DOT_SIZE) {
+	        		apple_x -= DOT_SIZE;
+	        	}
+	        	else { 
+	        		apple_x =+ DOT_SIZE;
+	        	}
+        }
+       }
     }
+    private void locatepApple() {
+    	
+    	int r = (int) (Math.random() * RAND_POS);
+        pApples_x.add((r * DOT_SIZE));
+
+        r = (int) (Math.random() * RAND_POS);
+        pApples_y.add ((r * DOT_SIZE));
+        int size = pApples_x.size() - 1;
+        	
+        if (pApples_x.get(size) == apple_x && pApples_y.get(size) == apple_y) {
+        	if (pApples_x.get(size) + DOT_SIZE > B_WIDTH - DOT_SIZE) {
+        		pApples_x.set(size, pApples_x.get(size) - DOT_SIZE);
+        	}
+        	else { 
+        		pApples_x.set(size, pApples_x.get(size) + DOT_SIZE);
+        	}
+       }
+        
+    }
+    
+    
+    
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
         if (inGame) {
-
+        	
+        	checkpApple();
             checkApple();
             checkCollision();
             move();
@@ -222,26 +296,27 @@ public class Board extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
 
             int key = e.getKeyCode();
+            
 
-            if ((key == KeyEvent.VK_LEFT) && (!rightDirection)) {
+            if ((key == KeyEvent.VK_LEFT) && (!((x[0] - DOT_SIZE) == x[1])) && (!rightDirection)) {
                 leftDirection = true;
                 upDirection = false;
                 downDirection = false;
             }
 
-            if ((key == KeyEvent.VK_RIGHT) && (!leftDirection)) {
+            if ((key == KeyEvent.VK_RIGHT) && (!((x[0] + DOT_SIZE) == x[1])) && (!leftDirection)) {
                 rightDirection = true;
                 upDirection = false;
                 downDirection = false;
             }
 
-            if ((key == KeyEvent.VK_UP) && (!downDirection)) {
+            if ((key == KeyEvent.VK_UP) && (!((y[0] - DOT_SIZE) == y[1])) && (!downDirection)) {
                 upDirection = true;
                 rightDirection = false;
                 leftDirection = false;
             }
 
-            if ((key == KeyEvent.VK_DOWN) && (!upDirection)) {
+            if ((key == KeyEvent.VK_DOWN) && (!((y[0] + DOT_SIZE) == y[1])) && (!upDirection)) {
                 downDirection = true;
                 rightDirection = false;
                 leftDirection = false;
