@@ -28,7 +28,7 @@ public class Board extends JPanel implements ActionListener {
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
 
-    private int DELAY = 135;
+    private int DELAY = 175;
     private int dots;
     private int apple_x;
     private int apple_y;
@@ -203,7 +203,7 @@ public class Board extends JPanel implements ActionListener {
 
         for (int z = dots; z > 0; z--) {
 
-            if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
+            if ((x[0] == x[z]) && (y[0] == y[z])) {
                 inGame = false;
             }
         }
@@ -290,26 +290,27 @@ public class Board extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
 
             int key = e.getKeyCode();
+            
 
-            if ((key == KeyEvent.VK_LEFT) && (!rightDirection)) {
+            if ((key == KeyEvent.VK_LEFT) && (!((x[0] - DOT_SIZE) == x[1])) && (!rightDirection)) {
                 leftDirection = true;
                 upDirection = false;
                 downDirection = false;
             }
 
-            if ((key == KeyEvent.VK_RIGHT) && (!leftDirection)) {
+            if ((key == KeyEvent.VK_RIGHT) && (!((x[0] + DOT_SIZE) == x[1])) && (!leftDirection)) {
                 rightDirection = true;
                 upDirection = false;
                 downDirection = false;
             }
 
-            if ((key == KeyEvent.VK_UP) && (!downDirection)) {
+            if ((key == KeyEvent.VK_UP) && (!((y[0] - DOT_SIZE) == y[1])) && (!downDirection)) {
                 upDirection = true;
                 rightDirection = false;
                 leftDirection = false;
             }
 
-            if ((key == KeyEvent.VK_DOWN) && (!upDirection)) {
+            if ((key == KeyEvent.VK_DOWN) && (!((y[0] + DOT_SIZE) == y[1])) && (!upDirection)) {
                 downDirection = true;
                 rightDirection = false;
                 leftDirection = false;
