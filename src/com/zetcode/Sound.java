@@ -14,30 +14,47 @@ import javax.sound.sampled.LineListener;
  */
 public class Sound {
 
-  public static void playSound() throws Exception {
+  public static void playGameOverSound() throws Exception {
 
-    // specify the sound to play
-    // (assuming the sound can be played by the audio system)
-    File soundFile = new File("src/resources/mixkit-arcade-space-shooter-dead-notification-272.wav");
+    File soundFile = new File("src/resources/GameOver.wav");
     AudioInputStream sound = AudioSystem.getAudioInputStream(soundFile);
 
-    // load the sound into memory (a Clip)
     DataLine.Info info = new DataLine.Info(Clip.class, sound.getFormat());
     Clip clip = (Clip) AudioSystem.getLine(info);
     clip.open(sound);
 
-    // due to bug in Java Sound, explicitly exit the VM when
-    // the sound has stopped.
-    /*clip.addLineListener(new LineListener() {
-      public void update(LineEvent event) {
-        if (event.getType() == LineEvent.Type.STOP) {
-          event.getLine().close();
-          System.exit(0);
-        }
-      }
-    });*/
-
-    // play the sound clip
     clip.start();
   }
-}     
+  public static void playAppleSound() throws Exception {
+	File appleSound = new File("src/resources/Apple.wav");
+    AudioInputStream sound = AudioSystem.getAudioInputStream(appleSound);
+
+    DataLine.Info info = new DataLine.Info(Clip.class, sound.getFormat());
+    Clip clip = (Clip) AudioSystem.getLine(info);
+    clip.open(sound);
+
+    clip.start();
+  }
+  public static void playpAppleSound() throws Exception {
+
+	    File pAppleSound = new File("src/resources/pApple.wav");
+	    AudioInputStream sound = AudioSystem.getAudioInputStream(pAppleSound);
+
+	    DataLine.Info info = new DataLine.Info(Clip.class, sound.getFormat());
+	    Clip clip = (Clip) AudioSystem.getLine(info);
+	    clip.open(sound);
+
+	    clip.start();
+	  }
+  public static void playpGoldAppleSound() throws Exception {
+
+	    File goldAppleSound = new File("src/resources/GoldApple.wav");
+	    AudioInputStream sound = AudioSystem.getAudioInputStream(goldAppleSound);
+
+	    DataLine.Info info = new DataLine.Info(Clip.class, sound.getFormat());
+	    Clip clip = (Clip) AudioSystem.getLine(info);
+	    clip.open(sound);
+
+	    clip.start();
+	  }
+}

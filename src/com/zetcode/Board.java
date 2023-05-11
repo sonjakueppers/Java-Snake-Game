@@ -155,6 +155,10 @@ public class Board extends JPanel implements ActionListener {
             dots++;
             DELAY--;
             locateApple();
+            try {
+            	Sound.playAppleSound();
+            } catch (Exception e) {        	
+            }
             score++;
             if (pAppleI == 2) {
             	locatepApple();
@@ -164,7 +168,6 @@ public class Board extends JPanel implements ActionListener {
             else {
             	pAppleI ++;
             }
-            java.awt.Toolkit.getDefaultToolkit().beep();
         }
     }
     private void checkpApple() {
@@ -172,6 +175,10 @@ public class Board extends JPanel implements ActionListener {
     	for(int i = 0; i < pApples_x.size(); i++) {
 	    	if ((x[0] == pApples_x.get(i)) && (y[0] == pApples_y.get(i))) {
 	    		inGame = false;
+	    		try {
+	            	Sound.playpAppleSound();
+	            } catch (Exception e) {	
+	            }
 	    	}
     	}	
     }
@@ -228,7 +235,7 @@ public class Board extends JPanel implements ActionListener {
         if (!inGame) {
             timer.stop();
            	try {
-				Sound.playSound();
+				Sound.playGameOverSound();
 			} catch (Exception e) {
 			}
 
