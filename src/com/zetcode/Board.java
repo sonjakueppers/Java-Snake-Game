@@ -5,7 +5,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,10 +22,10 @@ import java.util.*;
 public class Board extends JPanel implements ActionListener {
 
     private final int B_WIDTH = 250;
-    private final int B_HEIGHT = 250;
+    private final int B_HEIGHT = B_WIDTH;
     private final int DOT_SIZE = 10;
     private final int ALL_DOTS = 900;
-    private final int RAND_POS = 25;
+    private final int RAND_POS = B_WIDTH/DOT_SIZE;
     
 
     private final int x[] = new int[ALL_DOTS];
@@ -48,7 +50,10 @@ public class Board extends JPanel implements ActionListener {
     private Image ball;
     private Image apple;
     private Image pApple;
-    
+    private Image blueGrid;
+    private Image blueSquare;
+    private BufferedImage backGround = new BufferedImage (B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private Graphics2D blueBox;
     private Image head;
     
     //button-related
@@ -69,6 +74,8 @@ public class Board extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         loadImages();
         initGame();
+        blueBox = (Graphics2D)backGround.getGraphics();
+        getGrid();
     }
 
     private void loadImages() {
@@ -84,9 +91,21 @@ public class Board extends JPanel implements ActionListener {
         
         ImageIcon iip = new ImageIcon("src/resources/pApple.png");
         pApple = iip.getImage();
-        
+        ImageIcon iib = new ImageIcon("src/resources/blueSquare.png");
+        blueSquare = iib.getImage();
     }
 
+    private void getGrid(){
+    	for(int i = 0; i < RAND_POS; i++) {
+    		for(int j = 0; j < RAND_POS; j++) {
+        		int posI = i * 10;
+        		int posJ = j * 10;
+        		blueBox.drawImage(blueSquare, posI, posJ, this);
+        				
+        	}
+    	}
+    }
+    
     private void initGame() {
 
         dots = 3;
@@ -115,7 +134,7 @@ public class Board extends JPanel implements ActionListener {
         
         if (inGame) {
 
-        	
+        	g.drawImage(backGround, 0, 0, this);
             g.drawImage(apple, apple_x, apple_y, this);
             for (int i = 0; i < pApples_x.size(); i++) {
             	g.drawImage(pApple, pApples_x.get(i), pApples_y.get(i), this);
