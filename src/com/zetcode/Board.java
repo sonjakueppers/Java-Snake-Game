@@ -31,14 +31,13 @@ public class Board extends JPanel implements ActionListener {
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
 
-    private int DELAY = 175;
+    private final int DELAY = 175;
     private int dots;
     private int apple_x;
     private int apple_y;
     private ArrayList<Integer> pApples_x = new ArrayList<Integer>();
     private ArrayList<Integer> pApples_y = new ArrayList<Integer>();
     private int score = 0;
-    private int pAppleI = 0;
 
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -50,7 +49,6 @@ public class Board extends JPanel implements ActionListener {
     private Image ball;
     private Image apple;
     private Image pApple;
-    private Image blueGrid;
     private Image blueSquare;
     private BufferedImage backGround = new BufferedImage (B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
     private Graphics2D blueBox;
@@ -111,7 +109,7 @@ public class Board extends JPanel implements ActionListener {
         dots = 3;
 
         for (int z = 0; z < dots; z++) {
-            x[z] = 50 - z * 10;
+            x[z] = 50 - z * DOT_SIZE;
             y[z] = 50;
         }
         locatepApple();
@@ -166,13 +164,13 @@ public class Board extends JPanel implements ActionListener {
         String msg = "Game Over - Too Bad!!!";
         String msg1 = "Score: " + score;
         Font small = new Font("Helvetica", Font.BOLD, 14);
-        Font medeum = new Font("Helvetica", Font.BOLD, 18);
+        Font medium = new Font("Helvetica", Font.BOLD, 18);
         FontMetrics metr = getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
         g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 3);
-        g.setFont(medeum);
+        g.setFont(medium);
         g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2);
     }
 
@@ -181,20 +179,15 @@ public class Board extends JPanel implements ActionListener {
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
 
             dots++;
-            DELAY--;
+            score++;
+            timer.setDelay(timer.getDelay() - 1);
             locateApple();
             try {
             	Sound.playAppleSound();
             } catch (Exception e) {        	
             }
-            score++;
-            if (pAppleI == 2) {
+            if (dots % 3 == 0) {
             	locatepApple();
-            	pAppleI = 0;
-            	
-            }
-            else {
-            	pAppleI ++;
             }
         }
     }
@@ -222,15 +215,15 @@ public class Board extends JPanel implements ActionListener {
             x[0] -= DOT_SIZE;
         }
 
-        if (rightDirection) {
+        else if (rightDirection) {
             x[0] += DOT_SIZE;
         }
 
-        if (upDirection) {
+        else if (upDirection) {
             y[0] -= DOT_SIZE;
         }
 
-        if (downDirection) {
+        else if (downDirection) {
             y[0] += DOT_SIZE;
         }
     }
@@ -238,8 +231,7 @@ public class Board extends JPanel implements ActionListener {
     private void checkCollision() {
 
         for (int z = dots; z > 0; z--) {
-
-            if ((x[0] == x[z]) && (y[0] == y[z])) {
+        	if ((x[0] == x[z]) && (y[0] == y[z])) {
                 inGame = false;
             }
         }
@@ -248,15 +240,15 @@ public class Board extends JPanel implements ActionListener {
             inGame = false;
         }
 
-        if (y[0] < 0) {
+        else if (y[0] < 0) {
             inGame = false;
         }
 
-        if (x[0] >= B_WIDTH) {
+        else if (x[0] >= B_WIDTH) {
             inGame = false;
         }
 
-        if (x[0] < 0) {
+        else if (x[0] < 0) {
             inGame = false;
         }
         
@@ -309,20 +301,17 @@ public class Board extends JPanel implements ActionListener {
     }
     
     private void replayGame() {
-    	if(!inGame) {
-    		remove(restartButton);
-    		leftDirection = false;
-    	    rightDirection = true;
-    	    upDirection = false;
-    	    downDirection = false;
-    	    inGame = true;
-    	    score = 0;
-    	    pApples_x.clear();
-    	    pApples_y.clear();
-    	    pAppleI = 1;
-    	    revalidate();
-    	    initGame();
-    	}
+    	remove(restartButton);
+    	leftDirection = false;
+    	rightDirection = true;
+    	upDirection = false;
+    	downDirection = false;
+    	inGame = true;
+    	score = 0;
+    	pApples_x.clear();
+    	pApples_y.clear();
+    	revalidate();
+    	initGame();
     }
     
     
@@ -331,7 +320,7 @@ public class Board extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (inGame) {
+        if (inGame && e.getSource() != restartButton) {
         	
         	checkpApple();
             checkApple();
@@ -362,19 +351,19 @@ public class Board extends JPanel implements ActionListener {
                 downDirection = false;
             }
 
-            if ((key == KeyEvent.VK_RIGHT) && (!((x[0] + DOT_SIZE) == x[1])) && (!leftDirection)) {
+            else if ((key == KeyEvent.VK_RIGHT) && (!((x[0] + DOT_SIZE) == x[1])) && (!leftDirection)) {
                 rightDirection = true;
                 upDirection = false;
                 downDirection = false;
             }
 
-            if ((key == KeyEvent.VK_UP) && (!((y[0] - DOT_SIZE) == y[1])) && (!downDirection)) {
+            else if ((key == KeyEvent.VK_UP) && (!((y[0] - DOT_SIZE) == y[1])) && (!downDirection)) {
                 upDirection = true;
                 rightDirection = false;
                 leftDirection = false;
             }
 
-            if ((key == KeyEvent.VK_DOWN) && (!((y[0] + DOT_SIZE) == y[1])) && (!upDirection)) {
+            else if ((key == KeyEvent.VK_DOWN) && (!((y[0] + DOT_SIZE) == y[1])) && (!upDirection)) {
                 downDirection = true;
                 rightDirection = false;
                 leftDirection = false;
