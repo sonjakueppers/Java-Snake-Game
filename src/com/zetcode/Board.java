@@ -67,6 +67,7 @@ public class Board extends JPanel implements ActionListener {
     private void initBoard() {
 
         addKeyListener(new TAdapter());
+        restartButton.addActionListener(this);
         setBackground(Color.black);
         setFocusable(true);
 
@@ -155,7 +156,6 @@ public class Board extends JPanel implements ActionListener {
             gameOver(g);
             //button-related
             add(restartButton);
-            restartButton.addActionListener(this);
             revalidate();
         }        
     }
@@ -303,7 +303,6 @@ public class Board extends JPanel implements ActionListener {
     
     private void replayGame() {
     	remove(restartButton);
-    	restartButton.removeActionListener(this);
     	leftDirection = false;
     	rightDirection = true;
     	upDirection = false;
