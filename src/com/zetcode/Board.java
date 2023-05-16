@@ -38,6 +38,7 @@ public class Board extends JPanel implements ActionListener {
     private ArrayList<Integer> pApples_x = new ArrayList<Integer>();
     private ArrayList<Integer> pApples_y = new ArrayList<Integer>();
     private int score = 0;
+    private int highScore = 0;
 
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -161,11 +162,16 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void gameOver(Graphics g) {
+    	if(score > highScore) {
+    		highScore = score;
+    	}
         
         String msg = "Game Over - Too Bad!!!";
         String msg1 = "Score: " + score;
+        String msg2 = "High Score: " + highScore;
         Font small = new Font("Helvetica", Font.BOLD, 14);
         Font medium = new Font("Helvetica", Font.BOLD, 18);
+        
         FontMetrics metr = getFontMetrics(small);
 
         g.setColor(Color.white);
@@ -173,6 +179,7 @@ public class Board extends JPanel implements ActionListener {
         g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 3);
         g.setFont(medium);
         g.drawString(msg1, (B_WIDTH - metr.stringWidth(msg1)) / 2, B_HEIGHT / 2);
+        g.drawString(msg2, (B_WIDTH - metr.stringWidth(msg2)) /2, B_HEIGHT * 2/3);
     }
 
     private void checkApple() {
@@ -365,6 +372,29 @@ public class Board extends JPanel implements ActionListener {
             }
 
             else if ((key == KeyEvent.VK_DOWN) && (!((y[0] + DOT_SIZE) == y[1])) && (!upDirection)) {
+                downDirection = true;
+                rightDirection = false;
+                leftDirection = false;
+            }
+            else if ((key == KeyEvent.VK_A) && (!((x[0] - DOT_SIZE) == x[1])) && (!rightDirection)) {
+                leftDirection = true;
+                upDirection = false;
+                downDirection = false;
+            }
+
+            else if ((key == KeyEvent.VK_D) && (!((x[0] + DOT_SIZE) == x[1])) && (!leftDirection)) {
+                rightDirection = true;
+                upDirection = false;
+                downDirection = false;
+            }
+
+            else if ((key == KeyEvent.VK_W) && (!((y[0] - DOT_SIZE) == y[1])) && (!downDirection)) {
+                upDirection = true;
+                rightDirection = false;
+                leftDirection = false;
+            }
+
+            else if ((key == KeyEvent.VK_S) && (!((y[0] + DOT_SIZE) == y[1])) && (!upDirection)) {
                 downDirection = true;
                 rightDirection = false;
                 leftDirection = false;
