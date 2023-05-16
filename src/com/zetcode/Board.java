@@ -53,6 +53,7 @@ public class Board extends JPanel implements ActionListener {
     private BufferedImage backGround = new BufferedImage (B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
     private Graphics2D blueBox;
     private Image head;
+    private int difficulty = 1;
     
     //button-related
     private JButton restartButton = new JButton("Replay");
@@ -180,7 +181,7 @@ public class Board extends JPanel implements ActionListener {
 
             dots++;
             score++;
-            timer.setDelay(timer.getDelay() - 1);
+            timer.setDelay(timer.getDelay() - difficulty);
             locateApple();
             try {
             	Sound.playAppleSound();
@@ -302,6 +303,7 @@ public class Board extends JPanel implements ActionListener {
     
     private void replayGame() {
     	remove(restartButton);
+    	restartButton.removeActionListener(this);
     	leftDirection = false;
     	rightDirection = true;
     	upDirection = false;
